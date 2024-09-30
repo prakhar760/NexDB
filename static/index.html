@@ -3,348 +3,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PookieDB Manager</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.9.55/css/materialdesignicons.min.css" rel="stylesheet">
+    <title>NexDB Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
     <style>
-        :root {
-            --primary-color: #1976D2;
-            --secondary-color: #4CAF50;
-            --background-color: #F5F5F5;
-            --surface-color: #FFFFFF;
-            --error-color: #D32F2F;
-            --text-color: #212121;
-            --text-secondary-color: #757575;
-        }
         body {
-            font-family: 'Roboto', sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--background-color);
-            margin: 0;
-            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1c2331 0%, #2c3e50 100%);
+            color: #ecf0f1;
+            overflow-x: hidden;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        /* Sidebar Styles */
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            background-color: #34495e;
+            padding-top: 60px;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
         }
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 20px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .sidebar.active {
+            left: 0;
         }
-        h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            font-weight: 500;
-        }
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-        }
-        nav ul li {
-            margin-left: 20px;
-        }
-        nav ul li a {
-            color: white;
+        .sidebar a {
+            padding: 15px 20px;
             text-decoration: none;
-            font-weight: 500;
-            transition: opacity 0.3s;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-        nav ul li a:hover {
-            opacity: 0.8;
-        }
-        .section {
-            background-color: var(--surface-color);
-            border-radius: 4px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-        }
-        h2 {
-            color: var(--primary-color);
-            margin-top: 0;
-            font-size: 1.8rem;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
+            font-size: 1rem;
+            color: #ecf0f1;
             display: block;
-            margin-bottom: 5px;
-            color: var(--text-secondary-color);
+            transition: background 0.3s;
         }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #E0E0E0;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
-            font-size: 14px;
+        .sidebar a:hover {
+            background-color: #2c3e50;
         }
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+            background-color: rgba(44, 62, 80, 0.9);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
         }
-        button {
-            background-color: var(--primary-color);
+        .main-content.active {
+            margin-left: 250px;
+        }
+        /* Navbar Styles */
+        .navbar {
+            background-color: #2980b9;
             color: white;
-            border: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
             padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar-brand {
+            font-weight: 600;
+            color: white;
+        }
+        .navbar-toggler {
+            border: none;
+            color: white;
+        }
+        /* Hero Section */
+        .hero-section {
+            background-image: linear-gradient(135deg, #1c2331 0%, #2c3e50 100%);
+            color: #fff;
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        .hero-content p {
+            font-size: 1.25rem;
+            margin: 20px 0;
+        }
+        .hero-content .btn-primary {
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 50px;
+            transition: background-color 0.3s, transform 0.3s;
+            background-color: #27ae60;
+            border: none;
+        }
+        .hero-content .btn-primary:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+        }
+        /* Section Titles */
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #ecf0f1;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        /* Card Styles */
+        .card-custom {
+            background-color: #34495e;
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 50px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+        }
+        .card-custom:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .card-header {
+            background-color: #2980b9;
+            color: #fff;
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+        }
+        /* Form Styles */
+        .form-label {
             font-weight: 500;
-            text-transform: uppercase;
+            color: #ecf0f1;
         }
-        button:hover {
-            background-color: #1565C0;
+        .form-control {
+            background-color: #4a6285;
+            border: 1px solid #5d7aa9;
+            color: #ecf0f1;
+            border-radius: 15px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .form-control:focus {
+            background-color: #5d7aa9;
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            color: #ecf0f1;
         }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #E0E0E0;
+        .form-control::placeholder {
+            color: #a0b3cb;
         }
-        th {
-            background-color: #F5F5F5;
-            font-weight: 500;
-            color: var(--text-secondary-color);
+        /* Button Styles */
+        .btn-primary {
+            background-color: #3498db;
+            border: none;
+            transition: background-color 0.3s, transform 0.3s;
+            border-radius: 15px;
         }
-        .delete-btn {
-            background-color: var(--error-color);
-            padding: 5px 10px;
-            font-size: 12px;
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
         }
-        .delete-btn:hover {
-            background-color: #C62828;
+        .btn-danger {
+            background-color: #e74c3c;
+            border: none;
+            transition: background-color 0.3s, transform 0.3s;
+            border-radius: 15px;
         }
-        .mdi {
-            vertical-align: middle;
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
         }
-        .toast {
+        /* Toast Styles */
+        .toast-container {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 10px 20px;
-            border-radius: 4px;
-            color: white;
+            z-index: 1055;
+        }
+        .toast {
             opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .toast.success {
-            background-color: var(--secondary-color);
-        }
-        .toast.error {
-            background-color: var(--error-color);
+            transition: opacity 0.5s;
         }
         .toast.show {
             opacity: 1;
         }
+        /* Adjust Spacing */
+        .section-padding {
+            padding: 40px 0;
+        }
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div id="app">
-        <header>
-            <div class="container header-content">
-                <h1>PookieDB Manager</h1>
-                <nav>
-                    <ul>
-                        <li><a href="#insert">Insert</a></li>
-                        <li><a href="#find">Find</a></li>
-                        <li><a href="#update">Update</a></li>
-                        <li><a href="#index">Index</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
-
-        <div class="container">
-            <div id="insert" class="section">
-                <h2><i class="mdi mdi-database-plus"></i> Insert Document</h2>
-                <div class="form-group">
-                    <label for="insert-collection">Collection</label>
-                    <input id="insert-collection" v-model="newDoc.collection" placeholder="Enter collection name">
-                </div>
-                <div class="form-group">
-                    <label for="insert-data">Document Data (JSON)</label>
-                    <textarea id="insert-data" v-model="newDoc.data" rows="5" placeholder="Enter document data in JSON format"></textarea>
-                </div>
-                <button @click="insertDocument"><i class="mdi mdi-plus"></i> Insert</button>
-            </div>
-
-            <div id="find" class="section">
-                <h2><i class="mdi mdi-magnify"></i> Find Documents</h2>
-                <div class="form-group">
-                    <label for="find-collection">Collection</label>
-                    <input id="find-collection" v-model="findQuery.collection" placeholder="Enter collection name">
-                </div>
-                <div class="form-group">
-                    <label for="find-query">Query (JSON)</label>
-                    <input id="find-query" v-model="findQuery.query" placeholder="Enter query in JSON format">
-                </div>
-                <div class="form-group">
-                    <label for="find-sort">Sort (JSON)</label>
-                    <input id="find-sort" v-model="findQuery.sort" placeholder="Enter sort criteria in JSON format">
-                </div>
-                <div class="form-group">
-                    <label for="find-limit">Limit</label>
-                    <input id="find-limit" v-model="findQuery.limit" type="number" placeholder="Enter limit">
-                </div>
-                <button @click="findDocuments"><i class="mdi mdi-magnify"></i> Find</button>
-                <table v-if="documents.length">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Data</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="doc in documents" :key="doc._id">
-                            <td>{{ doc._id }}</td>
-                            <td>{{ JSON.stringify(doc) }}</td>
-                            <td>
-                                <button class="delete-btn" @click="deleteDocument(findQuery.collection, doc._id)">
-                                    <i class="mdi mdi-delete"></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div id="update" class="section">
-                <h2><i class="mdi mdi-pencil"></i> Update Document</h2>
-                <div class="form-group">
-                    <label for="update-collection">Collection</label>
-                    <input id="update-collection" v-model="updateDoc.collection" placeholder="Enter collection name">
-                </div>
-                <div class="form-group">
-                    <label for="update-id">Document ID</label>
-                    <input id="update-id" v-model="updateDoc.id" placeholder="Enter document ID">
-                </div>
-                <div class="form-group">
-                    <label for="update-data">Update Data (JSON)</label>
-                    <textarea id="update-data" v-model="updateDoc.data" rows="5" placeholder="Enter update data in JSON format"></textarea>
-                </div>
-                <button @click="updateDocument"><i class="mdi mdi-content-save"></i> Update</button>
-            </div>
-
-            <div id="index" class="section">
-                <h2><i class="mdi mdi-table-index"></i> Create Index</h2>
-                <div class="form-group">
-                    <label for="index-collection">Collection</label>
-                    <input id="index-collection" v-model="newIndex.collection" placeholder="Enter collection name">
-                </div>
-                <div class="form-group">
-                    <label for="index-field">Field</label>
-                    <input id="index-field" v-model="newIndex.field" placeholder="Enter field name">
-                </div>
-                <button @click="createIndex"><i class="mdi mdi-plus"></i> Create Index</button>
-            </div>
-        </div>
-
-        <div class="toast" :class="{ show: showToast, success: toastType === 'success', error: toastType === 'error' }">
-            {{ toastMessage }}
-        </div>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <a href="#insert"><i class="fas fa-plus-circle"></i> Insert</a>
+        <a href="#find"><i class="fas fa-search"></i> Find</a>
+        <a href="#update"><i class="fas fa-edit"></i> Update</a>
+        <a href="#index"><i class="fas fa-layer-group"></i> Index</a>
     </div>
 
-    <script>
-        new Vue({
-            el: '#app',
-            data: {
-                newDoc: { collection: '', data: '' },
-                findQuery: { collection: '', query: '', sort: '', limit: '' },
-                updateDoc: { collection: '', id: '', data: '' },
-                newIndex: { collection: '', field: '' },
-                documents: [],
-                showToast: false,
-                toastMessage: '',
-                toastType: 'success'
-            },
-            methods: {
-                async insertDocument() {
-                    try {
-                        const response = await axios.post(`/${this.newDoc.collection}`, JSON.parse(this.newDoc.data));
-                        this.showToastMessage(`Document inserted with ID: ${response.data.id}`, 'success');
-                        this.newDoc.data = '';
-                    } catch (error) {
-                        this.showToastMessage('Error inserting document', 'error');
-                    }
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <button class="btn btn-outline-light me-3" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="#">NexDB Dashboard</a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Welcome to NexDB - Next Gen NoSQL DB</h1>
+                <p>Manage your NoSQL database effortlessly with our intuitive dashboard.</p>
+                <a href="#insert" class="btn btn-primary"><i class="fas fa-database"></i> Get Started</a>
+            </div>
+        </section>
+
+        <!-- Main Container -->
+        <div class="container section-padding">
+            <!-- Insert Document Section -->
+            <section id="insert">
+                <h2 class="section-title">Insert Document</h2>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card-custom">
+                            <div class="card-header">
+                                <i class="fas fa-plus-circle"></i> Insert New Document
+                            </div>
+                            <div class="card-body">
+                                <form @submit.prevent="insertDocument">
+                                    <div class="mb-3">
+                                        <label for="insert-collection" class="form-label">Collection</label>
+                                        <input type="text" class="form-control" id="insert-collection" v-model="newDoc.collection" placeholder="Enter collection name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="insert-data" class="form-label">Document Data (JSON)</label>
+                                        <textarea class="form-control" id="insert-data" v-model="newDoc.data" rows="5" placeholder='e.g., {"name": "John Doe", "age": 30}' required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 insert-spinner" data-action="insert">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        Insert Document
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Find Documents Section -->
+            <section id="find">
+                <h2 class="section-title">Find Documents</h2>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card-custom">
+                            <div class="card-header">
+                                <i class="fas fa-search"></i> Find Documents
+                            </div>
+                            <div class="card-body">
+                                <form @submit.prevent="findDocuments">
+                                    <div class="mb-3">
+                                        <label for="find-collection" class="form-label">Collection</label>
+                                        <input type="text" class="form-control" id="find-collection" v-model="findQuery.collection" placeholder="Enter collection name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="find-query" class="form-label">Query (JSON)</label>
+                                        <input type="text" class="form-control" id="find-query" v-model="findQuery.query" placeholder='e.g., {"age": {"$gt": 25}}'>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="find-sort" class="form-label">Sort (JSON)</label>
+                                        <input type="text" class="form-control" id="find-sort" v-model="findQuery.sort" placeholder='e.g., [{"name": 1}]'>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="find-limit" class="form-label">Limit</label>
+                                        <input type="number" class="form-control" id="find-limit" v-model="findQuery.limit" placeholder="Enter limit">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 find-spinner" data-action="find">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        Find Documents
+                                    </button>
+                                </form>
+                                <!-- Documents Table -->
+                                <div v-if="documents.length" class="mt-4">
+                                    <table class="table table-hover table-dark">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Data</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="doc in documents" :key="doc._id">
+                                                <td>{{ doc._id }}</td>
+                                                <td><pre>{{ JSON.stringify(doc, null, 2) }}</pre></td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-sm" @click="deleteDocument(doc._id)">
+                                                        <i class="fas fa-trash-alt"></i> Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Update Document Section -->
+            <section id="update">
+                <h2 class="section-title">Update Document</h2>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card-custom">
+                            <div class="card-header">
+                                <i class="fas fa-edit"></i> Update Document
+                            </div>
+                            <div class="card-body">
+                                <form @submit.prevent="updateDocument">
+                                    <div class="mb-3">
+                                        <label for="update-collection" class="form-label">Collection</label>
+                                        <input type="text" class="form-control" id="update-collection" v-model="updateDoc.collection" placeholder="Enter collection name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="update-id" class="form-label">Document ID</label>
+                                        <input type="text" class="form-control" id="update-id" v-model="updateDoc.id" placeholder="Enter document ID" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="update-data" class="form-label">Update Data (JSON)</label>
+                                        <textarea class="form-control" id="update-data" v-model="updateDoc.data" rows="5" placeholder='e.g., {"$inc": {"age": 1}}' required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 update-spinner" data-action="update">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        Update Document
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Create Index Section -->
+            <section id="index">
+                <h2 class="section-title">Create Index</h2>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card-custom">
+                            <div class="card-header">
+                                <i class="fas fa-layer-group"></i> Create Index
+                            </div>
+                            <div class="card-body">
+                                <form @submit.prevent="createIndex">
+                                    <div class="mb-3">
+                                        <label for="index-collection" class="form-label">Collection</label>
+                                        <input type="text" class="form-control" id="index-collection" v-model="newIndex.collection" placeholder="Enter collection name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="index-field" class="form-label">Field</label>
+                                        <input type="text" class="form-control" id="index-field" v-model="newIndex.field" placeholder="Enter field name" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 index-spinner" data-action="index">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        Create Index
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container">
+            <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" id="successToast">
+                <div class="d-flex">
+                    <div class="toast-body" id="successToastBody">
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" id="errorToast">
+                <div class="d-flex">
+                    <div class="toast-body" id="errorToastBody">
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vue and Axios Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Custom JS -->
+        <script>
+            // Sidebar Toggle
+            document.addEventListener('DOMContentLoaded', function() {
+                const sidebarToggle = document.getElementById('sidebarToggle');
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('main-content');
+
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    mainContent.classList.toggle('active');
+                });
+            });
+
+            new Vue({
+                el: '#main-content',
+                data: {
+                    newDoc: { collection: '', data: '' },
+                    findQuery: { collection: '', query: '', sort: '', limit: '' },
+                    updateDoc: { collection: '', id: '', data: '' },
+                    newIndex: { collection: '', field: '' },
+                    documents: []
                 },
-                async findDocuments() {
-                    try {
-                        const params = new URLSearchParams();
-                        if (this.findQuery.query) params.append('query', this.findQuery.query);
-                        if (this.findQuery.sort) params.append('sort', this.findQuery.sort);
-                        if (this.findQuery.limit) params.append('limit', this.findQuery.limit);
-                        const response = await axios.get(`/${this.findQuery.collection}`, { params });
-                        this.documents = response.data;
-                        this.showToastMessage(`Found ${this.documents.length} documents`, 'success');
-                    } catch (error) {
-                        this.showToastMessage('Error finding documents', 'error');
+                methods: {
+                    async insertDocument() {
+                        this.toggleSpinner('insert-spinner');
+                        try {
+                            const response = await axios.post(`/${this.newDoc.collection}`, JSON.parse(this.newDoc.data));
+                            this.showToast(`Document inserted with ID: ${response.data.id}`, 'success');
+                            this.newDoc.data = '';
+                        } catch (error) {
+                            this.showToast('Error inserting document', 'error');
+                        } finally {
+                            this.toggleSpinner('insert-spinner');
+                        }
+                    },
+                    async findDocuments() {
+                        this.toggleSpinner('find-spinner');
+                        try {
+                            const params = {};
+                            if (this.findQuery.query) params.query = this.findQuery.query;
+                            if (this.findQuery.sort) params.sort = this.findQuery.sort;
+                            if (this.findQuery.limit) params.limit = this.findQuery.limit;
+                            const response = await axios.get(`/${this.findQuery.collection}`, { params });
+                            this.documents = response.data;
+                            this.showToast(`Found ${this.documents.length} documents`, 'success');
+                        } catch (error) {
+                            this.showToast('Error finding documents', 'error');
+                        } finally {
+                            this.toggleSpinner('find-spinner');
+                        }
+                    },
+                    async updateDocument() {
+                        this.toggleSpinner('update-spinner');
+                        try {
+                            await axios.put(`/${this.updateDoc.collection}/${this.updateDoc.id}`, JSON.parse(this.updateDoc.data));
+                            this.showToast('Document updated successfully', 'success');
+                            this.updateDoc.id = '';
+                            this.updateDoc.data = '';
+                        } catch (error) {
+                            this.showToast('Error updating document', 'error');
+                        } finally {
+                            this.toggleSpinner('update-spinner');
+                        }
+                    },
+                    async deleteDocument(id) {
+                        try {
+                            await axios.delete(`/${this.findQuery.collection}/${id}`);
+                            this.showToast('Document deleted successfully', 'success');
+                            await this.findDocuments();
+                        } catch (error) {
+                            this.showToast('Error deleting document', 'error');
+                        }
+                    },
+                    async createIndex() {
+                        this.toggleSpinner('index-spinner');
+                        try {
+                            await axios.post(`/${this.newIndex.collection}/index/${this.newIndex.field}`);
+                            this.showToast('Index created successfully', 'success');
+                            this.newIndex.field = '';
+                        } catch (error) {
+                            this.showToast('Error creating index', 'error');
+                        } finally {
+                            this.toggleSpinner('index-spinner');
+                        }
+                    },
+                    showToast(message, type) {
+                        const toast = type === 'success' ? new bootstrap.Toast(document.getElementById('successToast')) : new bootstrap.Toast(document.getElementById('errorToast'));
+                        const toastBody = type === 'success' ? document.getElementById('successToastBody') : document.getElementById('errorToastBody');
+                        toastBody.textContent = message;
+                        toast.show();
+                    },
+                    toggleSpinner(actionClass) {
+                        const spinner = document.querySelector(`.${actionClass} .spinner-border`);
+                        spinner.classList.toggle('d-none');
                     }
-                },
-                async updateDocument() {
-                    try {
-                        await axios.put(`/${this.updateDoc.collection}/${this.updateDoc.id}`, JSON.parse(this.updateDoc.data));
-                        this.showToastMessage('Document updated successfully', 'success');
-                        this.updateDoc.id = '';
-                        this.updateDoc.data = '';
-                    } catch (error) {
-                        this.showToastMessage('Error updating document', 'error');
-                    }
-                },
-                async deleteDocument(collection, id) {
-                    try {
-                        await axios.delete(`/${collection}/${id}`);
-                        this.showToastMessage('Document deleted successfully', 'success');
-                        this.findDocuments();
-                    } catch (error) {
-                        this.showToastMessage('Error deleting document', 'error');
-                    }
-                },
-                async createIndex() {
-                    try {
-                        await axios.post(`/${this.newIndex.collection}/index/${this.newIndex.field}`);
-                        this.showToastMessage('Index created successfully', 'success');
-                        this.newIndex.field = '';
-                    } catch (error) {
-                        this.showToastMessage('Error creating index', 'error');
-                    }
-                },
-                showToastMessage(message, type) {
-                    this.toastMessage = message;
-                    this.toastType = type;
-                    this.showToast = true;
-                    setTimeout(() => {
-                        this.showToast = false;
-                    }, 3000);
                 }
-            }
-        });
-    </script>
-</body>
+            });
+        </script>
+    </body>
 </html>
