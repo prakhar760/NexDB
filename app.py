@@ -31,7 +31,7 @@ def update_document(collection, doc_id):
     success = db.update(collection, doc_id, data)
     if success:
         return '', 204
-    return '', 404
+    return jsonify({"error": "Document not found"}), 404
 
 @app.route('/<collection>/<doc_id>', methods=['DELETE'])
 def delete_document(collection, doc_id):
