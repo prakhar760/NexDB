@@ -20,7 +20,7 @@ const Section = ({ id, title, icon }) => {
   useEffect(() => {
     const testAPI = async () => {
       try {
-        const response = await axios.get('https://nexdb-438008.el.r.appspot.com/'); // https://nexdb-438008.el.r.appspot.com/ https://nexdb-438008.el.r.appspot.com/
+        const response = await axios.get('http://localhost:5000/');
         console.log('API test response:', response);
       } catch (error) {
         console.error('API test error:', error);
@@ -42,7 +42,7 @@ const Section = ({ id, title, icon }) => {
       let response;
       switch (title) {
         case 'Insert Document':
-          response = await axios.post(`https://nexdb-438008.el.r.appspot.com/${collection}`, JSON.parse(data));
+          response = await axios.post(`http://localhost:5000/${collection}`, JSON.parse(data));
           setMessage(`Success: Document created with ID ${response.data.id}`);
           break;
         case 'Find Documents':
@@ -50,14 +50,14 @@ const Section = ({ id, title, icon }) => {
           if (query) params.query = query;
           if (sort) params.sort = sort;
           if (limit) params.limit = parseInt(limit);
-          response = await axios.get(`https://nexdb-438008.el.r.appspot.com/${collection}`, { params });
+          response = await axios.get(`http://localhost:5000/${collection}`, { params });
           setDocuments(response.data);
           setMessage(`Found ${response.data.length} document(s)`);
           break;
         case 'Update Document':
           const updatePayload = JSON.parse(updateData);
           response = await axios.put(
-            `https://nexdb-438008.el.r.appspot.com/${collection}/${documentId}`,
+            `http://localhost:5000/${collection}/${documentId}`,
             updatePayload,
             {
               headers: {
@@ -68,7 +68,7 @@ const Section = ({ id, title, icon }) => {
           setMessage('Document updated successfully');
           break;
         case 'Create Index':
-          await axios.post(`https://nexdb-438008.el.r.appspot.com/${collection}/index/${data}`);
+          await axios.post(`http://localhost:5000/${collection}/index/${data}`);
           setMessage(`Index created on field '${data}'`);
           break;
         default:
@@ -90,9 +90,9 @@ const Section = ({ id, title, icon }) => {
 
   const handleDelete = async (collectionName, docId) => {
     try {
-      await axios.delete(`https://nexdb-438008.el.r.appspot.com/${collectionName}/${docId}`);
+      await axios.delete(`http://localhost:5000/${collectionName}/${docId}`);
       setMessage(`Document ${docId} deleted successfully`);
-      const response = await axios.get(`https://nexdb-438008.el.r.appspot.com/${collectionName}`);
+      const response = await axios.get(`http://localhost:5000/${collectionName}`);
       setDocuments(response.data);
     } catch (error) {
       console.error('Error deleting document:', error);

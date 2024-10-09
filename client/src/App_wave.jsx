@@ -3,21 +3,7 @@ import Sidebar from './components/Sidebar';
 import Section from './components/Section';
 import GradientWaveBackground from './components/GradientWaveBackground';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { 
-  PlusCircleIcon, 
-  MagnifyingGlassIcon, 
-  PencilIcon, 
-  Square3Stack3DIcon, 
-  XMarkIcon, 
-  PencilSquareIcon, 
-  CheckIcon, 
-  ChartBarIcon,
-  ChatBubbleBottomCenterTextIcon,
-  UsersIcon,
-  HeartIcon,
-  SparklesIcon,
-  ArrowDownTrayIcon
-} from '@heroicons/react/24/outline';
+import { PlusCircleIcon, MagnifyingGlassIcon, PencilIcon, Square3Stack3DIcon, XMarkIcon, PencilSquareIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { ThemeProvider, ThemeContext } from './ThemeContext';
 
 const AppContent = () => {
@@ -44,13 +30,6 @@ const AppContent = () => {
     { id: 'find', title: 'Find Documents', icon: <MagnifyingGlassIcon className="w-6 h-6" /> },
     { id: 'update', title: 'Update Document', icon: <PencilIcon className="w-6 h-6" /> },
     { id: 'index', title: 'Create Index', icon: <Square3Stack3DIcon className="w-6 h-6" /> },
-    { id: 'analyze', title: 'Analyze Data', icon: <ChartBarIcon className="w-6 h-6" /> },
-    { id: 'visualize', title: 'Visualize Data', icon: <ChartBarIcon className="w-6 h-6" /> },
-    { id: 'nlquery', title: 'Natural Language Query', icon: <ChatBubbleBottomCenterTextIcon className="w-6 h-6" /> },
-    { id: 'collaborate', title: 'Collaborate', icon: <UsersIcon className="w-6 h-6" /> },
-    { id: 'health', title: 'Health Monitor', icon: <HeartIcon className="w-6 h-6" /> },
-    { id: 'aiinsights', title: 'AI Insights', icon: <SparklesIcon className="w-6 h-6" /> },
-    { id: 'exportimport', title: 'Export/Import', icon: <ArrowDownTrayIcon className="w-6 h-6" /> },
   ];
 
   const addTab = (content) => {
@@ -118,11 +97,11 @@ const AppContent = () => {
               </motion.h1>
               <div className="flex space-x-2 overflow-x-auto">
                 {tabs.map(tab => (
-                  <div
-                    key={tab.id}
-                    className={`group flex items-center space-x-2 px-3 py-2 rounded-md cursor-pointer transition-colors duration-200 ${
-                      tab.id === activeTab
-                        ? isDarkMode
+                  <div 
+                    key={tab.id} 
+                    className={`group flex items-center space-x-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                      activeTab === tab.id 
+                        ? isDarkMode 
                           ? 'bg-background text-text-primary' 
                           : 'bg-white text-blue-600'
                         : isDarkMode

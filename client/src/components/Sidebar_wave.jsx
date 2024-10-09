@@ -1,23 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
-import { 
-  PlusCircleIcon, 
-  MagnifyingGlassIcon, 
-  PencilIcon, 
-  Square3Stack3DIcon, 
-  ChevronDoubleLeftIcon, 
-  ChevronDoubleRightIcon, 
-  CogIcon, 
-  SunIcon, 
-  MoonIcon, 
-  ComputerDesktopIcon, 
-  ChartBarIcon,
-  ChatBubbleBottomCenterTextIcon,
-  UsersIcon,
-  HeartIcon,
-  SparklesIcon,
-  ArrowDownTrayIcon
-} from '@heroicons/react/24/outline';
+import { PlusCircleIcon, MagnifyingGlassIcon, PencilIcon, Square3Stack3DIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, CogIcon, SunIcon, MoonIcon, ComputerDesktopIcon } from '@heroicons/react/24/outline';
 import { ThemeContext } from '../ThemeContext';
 
 const Sidebar = ({ isOpen, setIsOpen, addTab }) => {
@@ -109,13 +92,6 @@ const Sidebar = ({ isOpen, setIsOpen, addTab }) => {
             <NavItem isOpen={isOpen} title="Find" icon={<MagnifyingGlassIcon className="w-6 h-6" />} onClick={() => addTab('find')} />
             <NavItem isOpen={isOpen} title="Update" icon={<PencilIcon className="w-6 h-6" />} onClick={() => addTab('update')} />
             <NavItem isOpen={isOpen} title="Create Index" icon={<Square3Stack3DIcon className="w-6 h-6" />} onClick={() => addTab('index')} />
-            <NavItem isOpen={isOpen} title="Analyze Data" icon={<ChartBarIcon className="w-6 h-6" />} onClick={() => addTab('analyze')} />
-            <NavItem isOpen={isOpen} title="Visualize" icon={<ChartBarIcon className="w-6 h-6" />} onClick={() => addTab('visualize')} />
-            <NavItem isOpen={isOpen} title="NL Query" icon={<ChatBubbleBottomCenterTextIcon className="w-6 h-6" />} onClick={() => addTab('nlquery')} />
-            <NavItem isOpen={isOpen} title="Collaborate" icon={<UsersIcon className="w-6 h-6" />} onClick={() => addTab('collaborate')} />
-            <NavItem isOpen={isOpen} title="Health Monitor" icon={<HeartIcon className="w-6 h-6" />} onClick={() => addTab('health')} />
-            <NavItem isOpen={isOpen} title="AI Insights" icon={<SparklesIcon className="w-6 h-6" />} onClick={() => addTab('aiinsights')} />
-            <NavItem isOpen={isOpen} title="Export/Import" icon={<ArrowDownTrayIcon className="w-6 h-6" />} onClick={() => addTab('exportimport')} />
           </motion.ul>
         </nav>
 
